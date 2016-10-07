@@ -9,6 +9,7 @@ void generate_matrix (double ** A, int n, double max_rho, double w_r) {
     double nondiag = -1.0/(h*h);
     for (int i=1; i<(n-1); i++) {
         for (int j=1; j<(n-1); j++) {
+            cout << j << endl;
             if (i==j) {
                 if (w_r == 0) {
                     A[i][j] = 2.0/(h*h) + rho*rho;
@@ -22,33 +23,8 @@ void generate_matrix (double ** A, int n, double max_rho, double w_r) {
             }
         }
         rho += i*h;
+        cout << rho << endl;
     }
-}
-
-
-void jacobi_method (double ** A, double ** R, int n) {
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < 0; j++) {
-            if (i == j) {
-                R[i][j] = 1.0;
-            } else {
-                R[i][j] = 0.0;
-            }
-        }
-    }
-
-    int l, k;
-    double epsilon = 1.0e-8;
-    int iterations = 0;
-    int max_iterations = n*n*n;
-    double max_nondiag = maxnondiag(A, &k, &l, n);
-
-    while (iterations < max_iterations && fabs(max_nondiag) > epsilon) {
-        max_nondiag = maxnondiag(A, &k, &l, n);
-        rotate (A, R, k, l, n);
-        iterations++;
-    }
-    cout << "Number of iterations: " << iterations << endl;
     return;
 }
 
@@ -109,6 +85,33 @@ double maxnondiag (double ** A, int * k, int * l, int n) {
     return max;
 }
 
+void jacobi_method (double ** A, double ** R, int n) {
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < 0; j++) {
+            if (i == j) {
+                R[i][j] = 1.0;
+            } else {
+                R[i][j] = 0.0;
+            }
+        }
+    }
+
+    int l, k;
+    double epsilon = 1.0e-8;
+    int iterations = 0;
+    int max_iterations = n*n*n;
+    double max_nondiag = maxnondiag(A, &k, &l, n);
+
+    while (iterations < max_iterations && fabs(max_nondiag) > epsilon) {
+        max_nondiag = maxnondiag(A, &k, &l, n);
+        rotate (A, R, k, l, n);
+        iterations++;
+    }
+    cout << "Number of iterations: " << iterations << endl;
+    return;
+}
+
+
 void fill_array(double ** A, int n)  {
     for (int i=0; i<n; i++) {
         for (int j=0; j<n; j++) {
@@ -134,11 +137,10 @@ int main() {
     //fill_array(A,n);
     //double test = maxnondiag(A,&k,&l,n);
     //cout << test << endl;
-    double ** A;
     int n = 5;
+    double ** A;
     double ** R;
-    int rho = 2000;
+    double rho = 0.3;
     generate_matrix(A,n,rho,0);
-    jacobi_method(A,R,n);
-
+    jacobi_method(A,R,(n-2));
 }
